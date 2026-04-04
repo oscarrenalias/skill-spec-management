@@ -9,38 +9,58 @@ user-invocable: false
 
 `spec.py` is the canonical tool for managing spec files. Always use it for spec lifecycle operations; do not use `mv`, manual frontmatter edits, or direct file manipulation.
 
+## Getting Started
+
+Before using any spec commands, complete these two steps.
+
+### Step 1 — Locate spec.py
+
+`spec.py` is installed alongside this `SKILL.md`. Find its path with:
+
+```bash
+find . -name "spec.py" -path "*/skills/*"
+```
+
+Use the result as `<spec-py>` in all commands below. If `spec.py` is not found under `skills/`, check the project root:
+
+```bash
+find . -maxdepth 2 -name "spec.py"
+```
+
+### Step 2 — Initialise specs/ if absent
+
+Check whether the project already has a specs directory:
+
+```bash
+test -d specs && echo "exists" || echo "missing"
+```
+
+If missing, initialise it before doing anything else:
+
+```bash
+python3 <spec-py> init
+```
+
+This creates `specs/drafts/`, `specs/planned/`, and `specs/done/`. Only needs to be done once per project.
+
 ## Invocation
 
 Run from the project root (where `specs/` lives):
 
 ```bash
-python3 skills/spec-management/spec.py <subcommand> [args]
-# or
-uv run python skills/spec-management/spec.py <subcommand> [args]
+python3 <spec-py> <subcommand> [args]
 ```
 
-Both forms are equivalent. Use `uv run python` when working inside the orchestration project to ensure the correct environment.
+`<spec-py>` is the path to `spec.py` resolved in Step 1 above. `spec.py` has no external dependencies and runs with the Python standard library only.
 
 ## Subcommands
-
-### `init` — Initialize the specs directory
-
-Creates `specs/drafts/`, `specs/planned/`, and `specs/done/` in the current directory.
-
-```bash
-python3 skills/spec-management/spec.py init
-```
-
-Fails if `specs/` already exists.
-
----
 
 ### `create <title>` — Create a new spec
 
 Creates a new spec file in `specs/drafts/` with a generated ID and a standard template.
 
 ```bash
-python3 skills/spec-management/spec.py create "My Feature Title"
+python3 <spec-py> create "My Feature Title"
 ```
 
 Output: path to the created file and its generated ID (e.g. `spec-a3f19c2b`).
@@ -54,11 +74,11 @@ The filename is derived from the title as a slug (lowercase, hyphens, `.md` exte
 Lists specs across all lifecycle folders with their ID, status, priority, complexity, and name.
 
 ```bash
-python3 skills/spec-management/spec.py list
-python3 skills/spec-management/spec.py list --status draft
-python3 skills/spec-management/spec.py list --status planned
-python3 skills/spec-management/spec.py list --tag backend
-python3 skills/spec-management/spec.py list --priority high
+python3 <spec-py> list
+python3 <spec-py> list --status draft
+python3 <spec-py> list --status planned
+python3 <spec-py> list --tag backend
+python3 <spec-py> list --priority high
 ```
 
 Filters can be combined. Legacy specs (no frontmatter) are shown with status `legacy`.
@@ -70,8 +90,8 @@ Filters can be combined. Legacy specs (no frontmatter) are shown with status `le
 Prints the frontmatter and first 20 lines of body for a spec.
 
 ```bash
-python3 skills/spec-management/spec.py show spec-a3f19c2b
-python3 skills/spec-management/spec.py show my-feature
+python3 <spec-py> show spec-a3f19c2b
+python3 <spec-py> show my-feature
 ```
 
 See [ID and filename resolution](#id-and-filename-resolution) for how `<spec>` is matched.
@@ -83,9 +103,9 @@ See [ID and filename resolution](#id-and-filename-resolution) for how `<spec>` i
 Updates the `status` field in frontmatter **and moves the file** to the matching lifecycle folder. This is the only supported way to change a spec's lifecycle stage.
 
 ```bash
-python3 skills/spec-management/spec.py set status planned spec-a3f19c2b
-python3 skills/spec-management/spec.py set status done    spec-a3f19c2b
-python3 skills/spec-management/spec.py set status draft   spec-a3f19c2b
+python3 <spec-py> set status planned spec-a3f19c2b
+python3 <spec-py> set status done    spec-a3f19c2b
+python3 <spec-py> set status draft   spec-a3f19c2b
 ```
 
 Valid values: `draft`, `planned`, `done`.
@@ -107,7 +127,7 @@ Output: new path of the file after the move.
 Sets the `feature_root_id` frontmatter field.
 
 ```bash
-python3 skills/spec-management/spec.py set feature-root B-a7bc3f91 spec-a3f19c2b
+python3 <spec-py> set feature-root B-a7bc3f91 spec-a3f19c2b
 ```
 
 ---
@@ -117,7 +137,7 @@ python3 skills/spec-management/spec.py set feature-root B-a7bc3f91 spec-a3f19c2b
 Replaces the `tags` list in frontmatter. Provide tags as a comma-separated string.
 
 ```bash
-python3 skills/spec-management/spec.py set tags "backend,auth" spec-a3f19c2b
+python3 <spec-py> set tags "backend,auth" spec-a3f19c2b
 ```
 
 ---
@@ -127,7 +147,7 @@ python3 skills/spec-management/spec.py set tags "backend,auth" spec-a3f19c2b
 Sets the `priority` field. Valid values: `high`, `medium`, `low`.
 
 ```bash
-python3 skills/spec-management/spec.py set priority high spec-a3f19c2b
+python3 <spec-py> set priority high spec-a3f19c2b
 ```
 
 ---
@@ -137,7 +157,7 @@ python3 skills/spec-management/spec.py set priority high spec-a3f19c2b
 Sets the `description` frontmatter field to a single-line text value.
 
 ```bash
-python3 skills/spec-management/spec.py set description "Adds OAuth login support" spec-a3f19c2b
+python3 <spec-py> set description "Adds OAuth login support" spec-a3f19c2b
 ```
 
 ---
@@ -147,7 +167,7 @@ python3 skills/spec-management/spec.py set description "Adds OAuth login support
 Adds a standard frontmatter block to a spec file that has none. Infers the name from the first `# Heading` or the filename, generates a new ID, and infers the status from the file's current folder.
 
 ```bash
-python3 skills/spec-management/spec.py migrate old-spec-filename
+python3 <spec-py> migrate old-spec-filename
 ```
 
 Fails if the spec already has frontmatter.
@@ -253,7 +273,7 @@ uv run orchestrator plan --write specs/drafts/my-spec.md
 After persisting, use `spec.py` to transition the spec to `planned`:
 
 ```bash
-python3 skills/spec-management/spec.py set status planned spec-a3f19c2b
+python3 <spec-py> set status planned spec-a3f19c2b
 ```
 
 Then commit both the beads and the spec status change together.
@@ -290,7 +310,7 @@ Conditions that must ALL be true:
 Then use `spec.py` to transition the spec:
 
 ```bash
-python3 skills/spec-management/spec.py set status done spec-a3f19c2b
+python3 <spec-py> set status done spec-a3f19c2b
 git add specs/
 git commit -m "Move my-spec to done/ after merge"
 ```
