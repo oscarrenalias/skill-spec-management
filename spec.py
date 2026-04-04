@@ -225,6 +225,9 @@ PLANNED_DIR = os.path.join(SPECS_DIR, "planned")
 DONE_DIR = os.path.join(SPECS_DIR, "done")
 
 LIFECYCLE_DIRS = [DRAFTS_DIR, PLANNED_DIR, DONE_DIR]
+SPEC_TEMPLATE_FILE = os.path.join(SPECS_DIR, "spec-template.md")
+
+_VALID_STATUS_RE = re.compile(r"^[a-zA-Z0-9-]+$")
 
 STATUS_TO_DIR: Dict[str, str] = {
     "draft": DRAFTS_DIR,
@@ -240,6 +243,44 @@ SPECS_NOT_FOUND_MSG = (
 _LIFECYCLE_DIRS_NOT_FOUND_MSG = (
     "error: specs directory not found — run from the project root"
 )
+
+
+# ---------------------------------------------------------------------------
+# Terminal colours
+# ---------------------------------------------------------------------------
+
+_NO_COLOR = bool(os.environ.get("NO_COLOR", ""))
+_STDOUT_TTY = sys.stdout.isatty()
+_STDERR_TTY = sys.stderr.isatty()
+
+
+def _ansi(text: str, *codes: str, tty: bool) -> str:
+    if _NO_COLOR or not tty:
+        return text
+    return f"\033[{';'.join(codes)}m{text}\033[0m"
+
+
+def _green(t: str) -> str:  return _ansi(t, "32",      tty=_STDOUT_TTY)
+def _cyan(t: str) -> str:   return _ansi(t, "36",      tty=_STDOUT_TTY)
+def _yellow(t: str) -> str: return _ansi(t, "33",      tty=_STDOUT_TTY)
+def _magenta(t: str) -> str: return _ansi(t, "35",     tty=_STDOUT_TTY)
+def _dim(t: str) -> str:    return _ansi(t, "2",       tty=_STDOUT_TTY)
+def _bold(t: str) -> str:   return _ansi(t, "1",       tty=_STDOUT_TTY)
+def _red_err(t: str) -> str:    return _ansi(t, "31",  tty=_STDERR_TTY)
+def _yellow_err(t: str) -> str: return _ansi(t, "33",  tty=_STDERR_TTY)
+
+_STATUS_COLOR: Dict[str, str] = {
+    "draft":   "33",   # yellow
+    "planned": "36",   # cyan
+    "done":    "32",   # green
+    "legacy":  "2",    # dim
+}
+
+
+def _color_status(status: str, padded: str) -> str:
+    """Return *padded* (already ljust'd) status string wrapped in its colour."""
+    code = _STATUS_COLOR.get(status, "35")  # magenta for arbitrary statuses
+    return _ansi(padded, code, tty=_STDOUT_TTY)
 
 
 # ---------------------------------------------------------------------------
@@ -380,13 +421,18 @@ def write_frontmatter(path: str, new_data: Dict[str, Any]) -> None:
 
 
 def find_all_specs() -> List[str]:
-    """Return sorted paths to every ``.md`` file across all lifecycle folders."""
+    """Return sorted paths to every ``.md`` file across all status folders."""
     paths: List[str] = []
-    for folder in LIFECYCLE_DIRS:
+    if not os.path.isdir(SPECS_DIR):
+        return paths
+    for entry in sorted(os.listdir(SPECS_DIR)):
+        if entry.startswith("."):
+            continue
+        folder = os.path.join(SPECS_DIR, entry)
         if os.path.isdir(folder):
-            for entry in sorted(os.listdir(folder)):
-                if entry.endswith(".md"):
-                    paths.append(os.path.join(folder, entry))
+            for filename in sorted(os.listdir(folder)):
+                if filename.endswith(".md"):
+                    paths.append(os.path.join(folder, filename))
     return paths
 
 
@@ -433,13 +479,13 @@ def resolve_spec(query: str) -> str:
             candidates.append(path)
 
     if not candidates:
-        print(f'error: no spec matching "{query}"', file=sys.stderr)
+        print(f'{_red_err("error")}: no spec matching "{query}"', file=sys.stderr)
         sys.exit(1)
 
     if len(candidates) > 1:
         ids = [_spec_id(p) or os.path.basename(p) for p in candidates]
         print(
-            f'error: "{query}" matches multiple specs: {", ".join(ids)}',
+            f'{_red_err("error")}: "{query}" matches multiple specs: {", ".join(ids)}',
             file=sys.stderr,
         )
         sys.exit(1)
@@ -455,7 +501,7 @@ def resolve_spec(query: str) -> str:
 def _require_specs_dir() -> None:
     """Exit 1 with a remediation message if specs/ is absent."""
     if not os.path.isdir(SPECS_DIR):
-        print(SPECS_NOT_FOUND_MSG, file=sys.stderr)
+        print(SPECS_NOT_FOUND_MSG.replace("error:", _red_err("error:"), 1), file=sys.stderr)
         sys.exit(1)
 
 
@@ -463,13 +509,24 @@ def _require_lifecycle_dirs() -> None:
     """Exit 1 if any lifecycle subfolder is missing."""
     missing = [d for d in LIFECYCLE_DIRS if not os.path.isdir(d)]
     if missing:
-        print(_LIFECYCLE_DIRS_NOT_FOUND_MSG, file=sys.stderr)
+        print(_LIFECYCLE_DIRS_NOT_FOUND_MSG.replace("error:", _red_err("error:"), 1), file=sys.stderr)
         sys.exit(1)
 
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
+
+def _status_to_dir(status: str) -> str:
+    """Return the directory path for a given status.
+
+    Canonical statuses with non-obvious directory names (e.g. draft → drafts/)
+    are resolved via STATUS_TO_DIR.  All other statuses map to specs/<status>/.
+    """
+    if status in STATUS_TO_DIR:
+        return STATUS_TO_DIR[status]
+    return os.path.join(SPECS_DIR, status)
 
 
 def _title_to_filename(title: str) -> str:
@@ -490,22 +547,7 @@ def _normalize_tags(raw: Any) -> List[str]:
     return [t.strip() for t in str(raw).split(",") if t.strip()]
 
 
-SPEC_TEMPLATE = """\
----
-name: {name}
-id: spec-{spec_id}
-description:
-dependencies:
-priority:
-complexity:
-status: draft
-tags: []
-scope:
-  in:
-  out:
-feature_root_id:
----
-
+SPEC_BODY_TEMPLATE = """\
 # {name}
 
 ## Objective
@@ -525,6 +567,26 @@ feature_root_id:
 """
 
 
+def _make_frontmatter(name: str, spec_id: str) -> str:
+    """Return a well-formed frontmatter block for a new spec."""
+    return (
+        "---\n"
+        f"name: {name}\n"
+        f"id: spec-{spec_id}\n"
+        "description:\n"
+        "dependencies:\n"
+        "priority:\n"
+        "complexity:\n"
+        "status: draft\n"
+        "tags: []\n"
+        "scope:\n"
+        "  in:\n"
+        "  out:\n"
+        "feature_root_id:\n"
+        "---\n"
+    )
+
+
 # ---------------------------------------------------------------------------
 # Command implementations
 # ---------------------------------------------------------------------------
@@ -540,7 +602,10 @@ def cmd_init(_args: argparse.Namespace) -> None:
     os.makedirs(DRAFTS_DIR)
     os.makedirs(PLANNED_DIR)
     os.makedirs(DONE_DIR)
-    print(f"Initialised specs/ in {os.getcwd()}")
+    with open(SPEC_TEMPLATE_FILE, "w", encoding="utf-8") as fh:
+        fh.write(SPEC_BODY_TEMPLATE)
+    print(f"{_green('Initialised')} specs/ in {os.getcwd()}")
+    print(f"Default template: {_cyan(SPEC_TEMPLATE_FILE)}")
 
 
 def cmd_create(args: argparse.Namespace) -> None:
@@ -552,17 +617,22 @@ def cmd_create(args: argparse.Namespace) -> None:
     dest = os.path.join(DRAFTS_DIR, filename)
 
     if os.path.exists(dest):
-        print(f"error: spec file already exists: {dest}", file=sys.stderr)
+        print(f"{_red_err('error')}: spec file already exists: {dest}", file=sys.stderr)
         sys.exit(1)
 
     spec_id = secrets.token_hex(4)
-    content = SPEC_TEMPLATE.format(name=title, spec_id=spec_id)
+    if os.path.exists(SPEC_TEMPLATE_FILE):
+        with open(SPEC_TEMPLATE_FILE, encoding="utf-8") as fh:
+            body = fh.read()
+    else:
+        body = SPEC_BODY_TEMPLATE
+    content = _make_frontmatter(title, spec_id) + body.replace("{name}", title)
 
     with open(dest, "w", encoding="utf-8") as fh:
         fh.write(content)
 
-    print(f"Created {dest}")
-    print(f"ID: spec-{spec_id}")
+    print(f"{_green('Created')} {_dim(dest)}")
+    print(f"ID: {_bold('spec-' + spec_id)}")
 
 
 def cmd_list(args: argparse.Namespace) -> None:
@@ -575,7 +645,7 @@ def cmd_list(args: argparse.Namespace) -> None:
         try:
             fm, _ = parse_frontmatter(path)
         except FrontmatterError as exc:
-            print(f"warning: {exc}", file=sys.stderr)
+            print(f"{_yellow_err('warning')}: {exc}", file=sys.stderr)
             fm = None
 
         if fm is None:
@@ -614,10 +684,13 @@ def cmd_list(args: argparse.Namespace) -> None:
     col_pr = max(len("priority"), max(len(r[2]) for r in rows))
     col_cx = max(len("complexity"), max(len(r[3]) for r in rows))
 
-    fmt = f"{{:<{col_id}}}  {{:<{col_st}}}  {{:<{col_pr}}}  {{:<{col_cx}}}  {{}}"
-    print(fmt.format("id", "status", "priority", "complexity", "name"))
+    fmt = f"{{:<{col_id}}}  {{}}  {{:<{col_pr}}}  {{:<{col_cx}}}  {{}}"
+    fmt_header = f"{{:<{col_id}}}  {{:<{col_st}}}  {{:<{col_pr}}}  {{:<{col_cx}}}  {{}}"
+    print(_bold(fmt_header.format("id", "status", "priority", "complexity", "name")))
     for row in rows:
-        print(fmt.format(*row))
+        spec_id, status, priority, complexity, name = row
+        colored_status = _color_status(status, status.ljust(col_st))
+        print(fmt.format(spec_id, colored_status, priority, complexity, name))
 
 
 def cmd_show(args: argparse.Namespace) -> None:
@@ -628,11 +701,11 @@ def cmd_show(args: argparse.Namespace) -> None:
     try:
         fm, body = parse_frontmatter(path)
     except FrontmatterError as exc:
-        print(f"error: {exc}", file=sys.stderr)
+        print(f"{_red_err('error')}: {exc}", file=sys.stderr)
         sys.exit(1)
 
     if fm is None:
-        print(f"warning: {path} is a legacy spec — no frontmatter")
+        print(f"{_yellow_err('warning')}: {path} is a legacy spec — no frontmatter")
         print()
         sys.stdout.write(body)
         return
@@ -661,12 +734,12 @@ def cmd_set(args: argparse.Namespace) -> None:
     try:
         fm, _ = parse_frontmatter(path)
     except FrontmatterError as exc:
-        print(f"error: {exc}", file=sys.stderr)
+        print(f"{_red_err('error')}: {exc}", file=sys.stderr)
         sys.exit(1)
 
     if fm is None:
         print(
-            f"error: {path} has no frontmatter — run 'spec migrate {args.spec}' first",
+            f"{_red_err('error')}: {path} has no frontmatter — run 'spec migrate {args.spec}' first",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -675,17 +748,24 @@ def cmd_set(args: argparse.Namespace) -> None:
     value = args.value
 
     if field == "status":
+        if not _VALID_STATUS_RE.match(value):
+            print(
+                f"{_red_err('error')}: invalid status {value!r} — must match [a-zA-Z0-9-]+",
+                file=sys.stderr,
+            )
+            sys.exit(1)
         fm["status"] = value
         write_frontmatter(path, fm)
 
-        target_dir = STATUS_TO_DIR[value]
+        target_dir = _status_to_dir(value)
+        os.makedirs(target_dir, exist_ok=True)
         new_path = os.path.join(target_dir, os.path.basename(path))
         if os.path.abspath(path) != os.path.abspath(new_path):
             try:
                 shutil.move(path, new_path)
             except OSError as exc:
                 print(
-                    f"error: could not move {path} to {new_path}: {exc}",
+                    f"{_red_err('error')}: could not move {path} to {new_path}: {exc}",
                     file=sys.stderr,
                 )
                 sys.exit(1)
@@ -724,20 +804,28 @@ def cmd_set(args: argparse.Namespace) -> None:
         print(f"Set description in {path}")
 
     else:
-        print(f"error: unknown field {field!r}", file=sys.stderr)
+        print(f"{_red_err('error')}: unknown field {field!r}", file=sys.stderr)
         sys.exit(1)
 
 
 def _status_from_path(path: str) -> str:
     """Infer lifecycle status from a spec file's parent folder.
 
-    Falls back to ``"draft"`` for files that do not live under a recognised
-    lifecycle directory (e.g. directly in ``specs/``).
+    Canonical statuses are resolved via STATUS_TO_DIR (handles the draft →
+    drafts/ naming irregularity).  Arbitrary statuses derive their name from
+    the parent directory when it is a direct child of specs/.  Falls back to
+    ``"draft"`` for files that do not live under a recognised directory.
     """
     abs_parent = os.path.abspath(os.path.dirname(path))
+    abs_specs = os.path.abspath(SPECS_DIR)
+
     for status, rel_dir in STATUS_TO_DIR.items():
         if abs_parent == os.path.abspath(rel_dir):
             return status
+
+    if os.path.dirname(abs_parent) == abs_specs:
+        return os.path.basename(abs_parent)
+
     return "draft"
 
 
@@ -747,7 +835,7 @@ def cmd_migrate(args: argparse.Namespace) -> None:
     path = resolve_spec(args.spec)
 
     if not is_legacy_spec(path):
-        print(f"error: {path} already has frontmatter", file=sys.stderr)
+        print(f"{_red_err('error')}: {path} already has frontmatter", file=sys.stderr)
         sys.exit(1)
 
     display_name = infer_display_name(path, None)
@@ -767,8 +855,8 @@ def cmd_migrate(args: argparse.Namespace) -> None:
         "feature_root_id": None,
     }
     write_frontmatter(path, fm)
-    print(f"Migrated {path}")
-    print(f"ID: spec-{spec_id}")
+    print(f"{_green('Migrated')} {_dim(path)}")
+    print(f"ID: {_bold('spec-' + spec_id)}")
 
 
 # ---------------------------------------------------------------------------
@@ -819,7 +907,7 @@ def build_parser() -> argparse.ArgumentParser:
     set_sub.required = True
 
     p_set_status = set_sub.add_parser("status", help="Set status and move file.")
-    p_set_status.add_argument("value", choices=["draft", "planned", "done"])
+    p_set_status.add_argument("value", metavar="status")
     p_set_status.add_argument("spec", help="Spec ID or partial filename")
     p_set_status.set_defaults(func=cmd_set)
 
@@ -867,5 +955,5 @@ if __name__ == "__main__":
     except SystemExit:
         raise
     except Exception as exc:  # noqa: BLE001
-        print(f"error: {exc}", file=sys.stderr)
+        print(f"{_red_err('error')}: {exc}", file=sys.stderr)
         sys.exit(1)

@@ -280,6 +280,22 @@ class TestFindAllSpecs(_TempDirTest):
         paths = spec_mod.find_all_specs()
         self.assertEqual(len(paths), 1)
 
+    def test_discovers_arbitrary_status_dir(self):
+        self._init_specs()
+        os.makedirs(os.path.join("specs", "postponed"))
+        _make_spec(os.path.join("specs", "postponed", "p.md"), spec_id="spec-0010")
+        paths = spec_mod.find_all_specs()
+        basenames = [os.path.basename(p) for p in paths]
+        self.assertIn("p.md", basenames)
+
+    def test_ignores_dotdirs(self):
+        self._init_specs()
+        os.makedirs(os.path.join("specs", ".hidden"))
+        _make_spec(os.path.join("specs", ".hidden", "secret.md"), spec_id="spec-0011")
+        paths = spec_mod.find_all_specs()
+        basenames = [os.path.basename(p) for p in paths]
+        self.assertNotIn("secret.md", basenames)
+
 
 # ---------------------------------------------------------------------------
 # resolve_spec
@@ -354,6 +370,18 @@ class TestCmdInit(_TempDirTest):
             self._run_init()
             self.assertIn("Initialised specs/", mock_out.getvalue())
 
+    def test_creates_spec_template_file(self):
+        self._run_init()
+        self.assertTrue(os.path.isfile(os.path.join("specs", "spec-template.md")))
+
+    def test_spec_template_is_body_only(self):
+        self._run_init()
+        with open(os.path.join("specs", "spec-template.md"), encoding="utf-8") as fh:
+            content = fh.read()
+        self.assertNotIn("\n---\n", content)       # no frontmatter delimiters
+        self.assertNotIn("{spec_id}", content)    # no frontmatter placeholders
+        self.assertIn("{name}", content)          # title placeholder in body is ok
+
     def test_errors_if_specs_already_exists(self):
         self._run_init()
         with patch("sys.stderr", new_callable=io.StringIO) as mock_err:
@@ -416,6 +444,31 @@ class TestCmdCreate(_TempDirTest):
             with self.assertRaises(SystemExit) as cm:
                 self._run_create("No Dir Spec")
             self.assertEqual(cm.exception.code, 1)
+
+    def test_uses_custom_template_if_present(self):
+        custom = "# {name}\n\nCustom body.\n"
+        with open(os.path.join("specs", "spec-template.md"), "w", encoding="utf-8") as fh:
+            fh.write(custom)
+        self._run_create("Template Test")
+        files = os.listdir("specs/drafts")
+        path = os.path.join("specs", "drafts", files[0])
+        with open(path, encoding="utf-8") as fh:
+            content = fh.read()
+        self.assertIn("Custom body.", content)
+        self.assertIn("Template Test", content)
+        # Frontmatter must always be present regardless of template content
+        fm, _ = spec_mod.parse_frontmatter(path)
+        self.assertIsNotNone(fm)
+        self.assertEqual(fm["status"], "draft")
+        self.assertTrue(fm["id"].startswith("spec-"))
+
+    def test_falls_back_to_builtin_template_when_file_absent(self):
+        # _init_specs() does not create spec-template.md — fallback should apply
+        self._run_create("Fallback Test")
+        files = os.listdir("specs/drafts")
+        path = os.path.join("specs", "drafts", files[0])
+        fm, _ = spec_mod.parse_frontmatter(path)
+        self.assertEqual(fm["name"], "Fallback Test")
 
 
 # ---------------------------------------------------------------------------
@@ -570,6 +623,37 @@ class TestCmdSetStatus(_TempDirTest):
             spec_mod.cmd_set(args)
             self.assertIn("planned", mock_out.getvalue())
 
+    def test_set_status_arbitrary_creates_dir_and_moves_file(self):
+        self._make_draft(filename="my-spec.md", spec_id="spec-arb01")
+        args = argparse.Namespace(spec="spec-arb01", field="status", value="postponed")
+        spec_mod.cmd_set(args)
+        self.assertTrue(os.path.exists(os.path.join("specs", "postponed", "my-spec.md")))
+        self.assertFalse(os.path.exists(os.path.join("specs", "drafts", "my-spec.md")))
+
+    def test_set_status_arbitrary_updates_frontmatter(self):
+        self._make_draft(filename="my-spec.md", spec_id="spec-arb02")
+        args = argparse.Namespace(spec="spec-arb02", field="status", value="blocked")
+        spec_mod.cmd_set(args)
+        new_path = os.path.join("specs", "blocked", "my-spec.md")
+        fm, _ = spec_mod.parse_frontmatter(new_path)
+        self.assertEqual(fm["status"], "blocked")
+
+    def test_set_status_valid_hyphenated(self):
+        self._make_draft(filename="my-spec.md", spec_id="spec-arb03")
+        args = argparse.Namespace(spec="spec-arb03", field="status", value="in-progress")
+        spec_mod.cmd_set(args)
+        self.assertTrue(os.path.exists(os.path.join("specs", "in-progress", "my-spec.md")))
+
+    def test_set_status_invalid_value_exits(self):
+        self._make_draft(spec_id="spec-inv01")
+        for bad in ["../../evil", "bad/status", "has space", ""]:
+            with self.subTest(bad=bad):
+                args = argparse.Namespace(spec="spec-inv01", field="status", value=bad)
+                with patch("sys.stderr", new_callable=io.StringIO):
+                    with self.assertRaises(SystemExit) as cm:
+                        spec_mod.cmd_set(args)
+                    self.assertEqual(cm.exception.code, 1)
+
 
 class TestCmdSetOtherFields(_TempDirTest):
     def setUp(self):
@@ -711,6 +795,16 @@ class TestStatusFromPath(_TempDirTest):
         path = os.path.join("specs", "x.md")
         self.assertEqual(spec_mod._status_from_path(path), "draft")
 
+    def test_arbitrary_status_dir(self):
+        os.makedirs(os.path.join("specs", "postponed"))
+        path = os.path.join("specs", "postponed", "x.md")
+        self.assertEqual(spec_mod._status_from_path(path), "postponed")
+
+    def test_arbitrary_hyphenated_status_dir(self):
+        os.makedirs(os.path.join("specs", "in-progress"))
+        path = os.path.join("specs", "in-progress", "x.md")
+        self.assertEqual(spec_mod._status_from_path(path), "in-progress")
+
 
 # ---------------------------------------------------------------------------
 # _normalize_tags
@@ -813,6 +907,28 @@ class TestBuildParser(unittest.TestCase):
         args = parser.parse_args(["migrate", "spec-abc"])
         self.assertEqual(args.subcommand, "migrate")
         self.assertEqual(args.spec, "spec-abc")
+
+
+# ---------------------------------------------------------------------------
+# _status_to_dir
+# ---------------------------------------------------------------------------
+
+
+class TestStatusToDir(unittest.TestCase):
+    def test_draft_uses_drafts_dir(self):
+        self.assertEqual(spec_mod._status_to_dir("draft"), os.path.join("specs", "drafts"))
+
+    def test_planned_uses_planned_dir(self):
+        self.assertEqual(spec_mod._status_to_dir("planned"), os.path.join("specs", "planned"))
+
+    def test_done_uses_done_dir(self):
+        self.assertEqual(spec_mod._status_to_dir("done"), os.path.join("specs", "done"))
+
+    def test_arbitrary_uses_specs_slash_status(self):
+        self.assertEqual(spec_mod._status_to_dir("postponed"), os.path.join("specs", "postponed"))
+
+    def test_arbitrary_hyphenated(self):
+        self.assertEqual(spec_mod._status_to_dir("in-progress"), os.path.join("specs", "in-progress"))
 
 
 if __name__ == "__main__":
