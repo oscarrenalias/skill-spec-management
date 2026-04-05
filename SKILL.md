@@ -87,11 +87,12 @@ Filters can be combined. Legacy specs (no frontmatter) are shown with status `le
 
 ### `show <spec>` — Show spec details
 
-Prints the frontmatter and first 20 lines of body for a spec.
+Prints the frontmatter and first 20 lines of body for a spec. Use `--full` to print the entire body.
 
 ```bash
 python3 <spec-py> show spec-a3f19c2b
 python3 <spec-py> show my-feature
+python3 <spec-py> show --full spec-a3f19c2b
 ```
 
 See [ID and filename resolution](#id-and-filename-resolution) for how `<spec>` is matched.
