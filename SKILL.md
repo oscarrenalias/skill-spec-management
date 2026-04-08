@@ -1,8 +1,8 @@
 ---
 name: spec-management
-description: Canonical workflow for spec lifecycle operations using spec.py — initialization, creation, querying, metadata updates, and status transitions. Also covers writing specs, planning beads, and merging features in codex-agent-orchestration.
+description: This skill supports managing spec files, as part of spec-driven development. The skill exposes functions for creating, listing, showing, and updating spec files. This skill must always be used to create and manage specs, and to update metadata for spec files (description, dependencies, priority, complexity, status, tags, and scope). Editing of the content of spec files, except for the frontmatter fields that the skill manages for the metadata, is outside the scope of this skill and should be done by agents directly in the file. Agents should not edit any frontmatter fields directly in the file, but should use the provided functions to ensure the filesystem and frontmatter stay in sync.
 tools: Read, Write, Edit, Glob, Grep, Bash
-user-invocable: false
+license: MIT
 ---
 
 # spec-management
@@ -42,6 +42,8 @@ python3 <spec-py> init
 ```
 
 This creates `specs/drafts/`, `specs/planned/`, and `specs/done/`. Only needs to be done once per project.
+
+"drafts", "planned", and "done" are the default lifecycle stages, but custom status values are supported. The skill enforces that a spec file lives in the folder matching its `status` frontmatter field, so if you use custom status values, the skill script will enforce the correct folder structure automatically.
 
 ## Invocation
 
@@ -120,6 +122,8 @@ Valid values: `draft`, `planned`, `done`.
 Output: new path of the file after the move.
 
 > **Do not use `mv`** to move spec files between folders. `set status` keeps the frontmatter and filesystem location in sync atomically.
+
+Custom status values are supported. The skill will create the necessary folders as needed and enforce that the `status` field matches the folder name.
 
 ---
 
@@ -245,25 +249,15 @@ specs/
 
 **Rule:** A spec lives in exactly one folder. Move it forward only when the transition condition is met.
 
-| Transition | Condition |
-|---|---|
-| drafts → planned | `orchestrator plan --write <spec>` has been run and beads created |
-| planned → done | All beads in the feature tree are `done` AND the feature branch has been merged to main |
-
-Never move a spec to `done/` before merging. Never move to `planned/` before beads are persisted.
-
 ---
 
 ## Writing a Spec
 
-### Required sections
+### Template
 
-1. **Objective** — One paragraph: what problem this solves and why it matters
-2. **Problems to Fix** — Numbered list of specific issues, with current state described concretely
-3. **Changes** — What to build: new files, modified files, new behaviours. Be prescriptive — include function signatures, field names, config keys, CLI flags where known
-4. **Files to Modify** — Table: file path → what changes
-5. **Acceptance Criteria** — Bullet list of verifiable conditions the implementation must satisfy
-6. **Pending Decisions** — Any open questions that must be resolved before planning. Mark resolved decisions inline (strikethrough + resolution)
+A default template is used when creating a new spec with `spec.py create`. The template includes only markdown sections but no frontmatter with metadata, as those will be managed automatically by the skill when initializing the skill.
+
+The default template is `specs/spec-template.md`. You or the user can edit this file to change the default content for new specs depending on the project's needs. The template can include any content but the default version is a good starting point.
 
 ### Good spec practices
 
@@ -277,4 +271,4 @@ Never move a spec to `done/` before merging. Never move to `planned/` before bea
 
 - Implementation details the agent should decide (e.g. variable names, internal algorithm choice)
 - Speculative future features — scope to what's actually being built
-- Duplicate content from CLAUDE.md
+- Duplicate content from project-level instructions
