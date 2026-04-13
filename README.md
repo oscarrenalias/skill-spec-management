@@ -15,7 +15,7 @@ python3 spec.py <subcommand> [args]
 | Subcommand | Description |
 |---|---|
 | `init` | Create the `specs/drafts/`, `specs/planned/`, `specs/done/` folder structure |
-| `create <title>` | Create a new spec in `specs/drafts/` with a generated ID and standard template |
+| `create <title>` | Create a new spec in `specs/drafts/` with a generated ID and standard template; auto-creates lifecycle subdirs if missing |
 | `list` | List all specs with ID, status, priority, complexity, and name |
 | `list --status <s>` | Filter by status (`draft`, `planned`, `done`) |
 | `list --tag <tag>` | Filter by tag |
@@ -57,6 +57,8 @@ specs/
 ├── planned/
 └── done/
 ```
+
+> **Tip:** If `specs/` already exists (e.g. cloned from another project), you can skip `init`. The `create` command will auto-create any missing lifecycle subdirectories on first use.
 
 ### 3. Create your first spec
 
