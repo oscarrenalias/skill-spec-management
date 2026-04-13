@@ -7,8 +7,8 @@
   "bead_type": "task",
   "parent_id": "B-723fabbf",
   "dependencies": [
-    "B-81f5fbb6",
     "B-60dca703",
+    "B-81f5fbb6",
     "B-c298ec65"
   ],
   "acceptance_criteria": [
