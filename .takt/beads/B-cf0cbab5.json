@@ -46,7 +46,10 @@
     ".takt/beads/B-81f5fbb6.json",
     ".takt/beads/B-c298ec65.json",
     ".takt/beads/B-cf0cbab5.json",
-    "spec.py"
+    "README.md",
+    "SKILL.md",
+    "spec.py",
+    "tests/test_spec.py"
   ],
   "changed_files": [
     ".takt/beads/.gitkeep",
@@ -56,7 +59,10 @@
     ".takt/beads/B-81f5fbb6.json",
     ".takt/beads/B-c298ec65.json",
     ".takt/beads/B-cf0cbab5.json",
-    "spec.py"
+    "README.md",
+    "SKILL.md",
+    "spec.py",
+    "tests/test_spec.py"
   ],
   "updated_docs": [],
   "handoff_summary": {
