@@ -21,7 +21,7 @@ from unittest.mock import patch
 # ---------------------------------------------------------------------------
 
 _HERE = os.path.dirname(__file__)
-_SKILLS_DIR = os.path.abspath(os.path.join(_HERE, ".."))
+_SKILLS_DIR = os.path.abspath(os.path.join(_HERE, "..", ".apm", "skills", "skill-spec-management"))
 if _SKILLS_DIR not in sys.path:
     sys.path.insert(0, _SKILLS_DIR)
 

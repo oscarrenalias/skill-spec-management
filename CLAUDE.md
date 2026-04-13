@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `skill-spec-management` is a skill packaged as an APM (Agent Package Manager) module. It provides a spec-driven development workflow via `spec.py` — a CLI tool for managing spec files through a lifecycle of `draft → planned → done`.
 
-The skill is declared in `SKILL.md` (frontmatter + usage docs) and implemented in `spec.py`. The `apm.yml` file is the APM package manifest.
+The skill is declared in `.apm/skills/skill-spec-management/SKILL.md` (frontmatter + usage docs) and implemented in `.apm/skills/skill-spec-management/spec.py`. The `apm.yml` file is the APM package manifest.
 
 ## Running Tests
 
@@ -26,7 +26,7 @@ python3 -m unittest tests.test_spec.TestCmdCreate
 
 Whenever a feature is added or changed in `spec.py`, always update **all three** of:
 
-1. **`SKILL.md`** — update the relevant subcommand section, flags, and examples so agents using the skill have accurate instructions.
+1. **`.apm/skills/skill-spec-management/SKILL.md`** — update the relevant subcommand section, flags, and examples so agents using the skill have accurate instructions.
 2. **`README.md`** — update the CLI reference table and any affected prose.
 3. **`tests/test_spec.py`** — add or update tests to cover the new behaviour.
 
@@ -34,7 +34,7 @@ Never consider a feature complete until all three are updated.
 
 ## Architecture
 
-### `spec.py`
+### `.apm/skills/skill-spec-management/spec.py`
 
 Standalone Python CLI with no external dependencies. Key layers:
 
