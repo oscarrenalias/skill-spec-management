@@ -5,7 +5,9 @@ specs/
 .claude/
 
 # takt
+.takt/beads/
 .takt/worktrees/
 .takt/telemetry/
 .takt/logs/
 .takt/agent-runs/
+.takt/memory/
