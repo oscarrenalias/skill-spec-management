@@ -1,0 +1,88 @@
+{
+  "bead_id": "B-723fabbf",
+  "title": "Auto-create lifecycle dirs in cmd_create",
+  "agent_type": "planner",
+  "description": "Top-level feature container for spec-791d01a3. Replaces the _require_lifecycle_dirs() guard in cmd_create with os.makedirs calls so that missing subdirectories are created on demand rather than causing an error. Covers the implementation change, new regression test, documentation updates, and a final review pass.",
+  "status": "done",
+  "bead_type": "feature",
+  "parent_id": "B-547bf6c1",
+  "dependencies": [],
+  "acceptance_criteria": [
+    "spec.py create succeeds when specs/ exists but drafts/, planned/, done/ are absent",
+    "spec.py create still fails when specs/ itself does not exist",
+    "Existing behaviour is unchanged when all three lifecycle dirs are already present",
+    "SKILL.md and README.md reflect the updated behaviour",
+    "New test covers the no-subdirs case and passes alongside the existing suite"
+  ],
+  "linked_docs": [
+    "spec.py",
+    "tests/test_spec.py",
+    "SKILL.md",
+    "README.md"
+  ],
+  "feature_root_id": "B-723fabbf",
+  "execution_branch_name": "feature/b-723fabbf",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/skill-spec-management/.takt/worktrees/B-723fabbf",
+  "expected_files": [],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-04-13T07:54:34.138060+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-04-13T07:55:55.962050+00:00",
+      "event": "git_commit_failed",
+      "agent_type": "scheduler",
+      "summary": "git commit failed: Command '['git', 'commit', '-m', '[bead] B-723fabbf: done', '--no-verify']' returned non-zero exit status 1.",
+      "details": {
+        "error": "Command '['git', 'commit', '-m', '[bead] B-723fabbf: done', '--no-verify']' returned non-zero exit status 1."
+      }
+    },
+    {
+      "timestamp": "2026-04-13T07:57:31.917540+00:00",
+      "event": "git_commit_failed",
+      "agent_type": "scheduler",
+      "summary": "git commit failed: Command '['git', 'commit', '-m', '[bead] B-723fabbf: done', '--no-verify']' returned non-zero exit status 1.",
+      "details": {
+        "error": "Command '['git', 'commit', '-m', '[bead] B-723fabbf: done', '--no-verify']' returned non-zero exit status 1."
+      }
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
