@@ -95,6 +95,15 @@
       "agent_type": "developer",
       "summary": "Worker started",
       "details": {}
+    },
+    {
+      "timestamp": "2026-04-13T07:55:56.221728+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "developer",
+      "summary": "Applied guardrails from .takt/agent-runs/B-81f5fbb6/repo/templates/agents/developer.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-81f5fbb6/repo/templates/agents/developer.md"
+      }
     }
   ],
   "metadata": {
@@ -111,7 +120,59 @@
     ],
     "skill_bundle_hash": "2cbacb3ae07c8eee2a6bb3d65b99b3e4df7fa47ac8b10c5c68be4b338a583348",
     "isolated_home": "/Users/oscar.renalias/Projects/skill-spec-management/.takt/agent-runs/B-81f5fbb6/home",
-    "runner_backend": "claude"
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "developer",
+      "template_path": ".takt/agent-runs/B-81f5fbb6/repo/templates/agents/developer.md",
+      "template_text": "# Developer Guardrails\n\nPrimary responsibility: Implement only the assigned bead inside the existing architecture and file scope.\n\nAllowed actions:\n- Modify code, configuration, or local docs required to complete the assigned bead.\n- Create sub-beads for discovered follow-up work that should be handled separately.\n- Verify your `Python` changes compile and import correctly with a quick syntax check: `python -m py_compile`.\n\nDisallowed actions:\n- Run any test suite \u2014 not even a targeted `pytest` run or any subset. Test execution is exclusively the tester agent's responsibility. Running tests wastes the agent budget and delays the pipeline.\n- Redesign unrelated architecture or broaden scope beyond the assigned bead.\n- Perform final review signoff in place of a review agent.\n- Silently absorb unrelated test, documentation, or planning work that should be handed off.\n\nExpected outputs:\n- Completed or blocked JSON with concise implementation summary.\n- Accurate touched files, changed files, risks, and follow-up handoff fields.",
+      "captured_at": "2026-04-13T07:55:56.221712+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-81f5fbb6",
+      "feature_root_id": "B-723fabbf",
+      "title": "Replace lifecycle dir guard with auto-create in cmd_create",
+      "agent_type": "developer",
+      "description": "In spec.py:cmd_create (line 613), remove the `_require_lifecycle_dirs()` call and replace it with `for d in LIFECYCLE_DIRS: os.makedirs(d, exist_ok=True)`. This is a one-line surgical change; `_require_lifecycle_dirs` is left intact for any other potential callers.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "_require_lifecycle_dirs() is no longer called inside cmd_create",
+        "All three lifecycle dirs are created via os.makedirs(d, exist_ok=True) before the file is written",
+        "cmd_create still calls _require_specs_dir() as the first guard",
+        "No other functions are modified"
+      ],
+      "dependencies": [],
+      "linked_docs": [
+        "spec.py"
+      ],
+      "execution_branch_name": "feature/b-723fabbf",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/skill-spec-management/.takt/worktrees/B-723fabbf",
+      "expected_files": [
+        "spec.py"
+      ],
+      "expected_globs": [],
+      "touched_files": [],
+      "conflict_risks": "",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    }
   },
   "labels": [],
   "recovery_for": null,
