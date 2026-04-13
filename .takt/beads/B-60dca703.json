@@ -6,7 +6,9 @@
   "status": "ready",
   "bead_type": "task",
   "parent_id": "B-723fabbf",
-  "dependencies": [],
+  "dependencies": [
+    "B-81f5fbb6"
+  ],
   "acceptance_criteria": [
     "New test test_create_auto_creates_missing_lifecycle_dirs passes",
     "Test sets up only specs/ (no subdirs) and calls cmd_create with a title",
