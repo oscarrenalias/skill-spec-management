@@ -3,7 +3,7 @@
   "title": "Review spec-791d01a3 implementation",
   "agent_type": "review",
   "description": "Review the complete change set for spec-791d01a3: the spec.py edit, the new test, and the documentation updates. Verify correctness, consistency with project conventions, and that the acceptance criteria in the spec are fully satisfied.",
-  "status": "ready",
+  "status": "in_progress",
   "bead_type": "task",
   "parent_id": "B-723fabbf",
   "dependencies": [
@@ -87,9 +87,12 @@
   },
   "block_reason": "",
   "conflict_risks": "None \u2014 change is confined to a single line inside cmd_create with no shared state mutations.",
-  "branch_name": "",
+  "branch_name": "feature/b-723fabbf",
   "worktree_path": "",
-  "lease": null,
+  "lease": {
+    "owner": "review:B-cf0cbab5",
+    "expires_at": "2026-04-13T08:28:49.589389+00:00"
+  },
   "retries": 0,
   "execution_history": [
     {
@@ -98,9 +101,46 @@
       "agent_type": "scheduler",
       "summary": "Bead created",
       "details": {}
+    },
+    {
+      "timestamp": "2026-04-13T07:58:50.223973+00:00",
+      "event": "skills_loaded",
+      "agent_type": "review",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/reviewer-signoff",
+          "capability/code-review",
+          "task/corrective-bead-creation",
+          "task/risk-assessment",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-04-13T07:58:50.224000+00:00",
+      "event": "started",
+      "agent_type": "review",
+      "summary": "Worker started",
+      "details": {}
     }
   ],
-  "metadata": {},
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/skill-spec-management/.takt/agent-runs/B-cf0cbab5",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/reviewer-signoff",
+      "capability/code-review",
+      "task/corrective-bead-creation",
+      "task/risk-assessment",
+      "memory"
+    ],
+    "skill_bundle_hash": "e49ae02cdd641b1b539810ca3dc9f7cb45c7fa56ae2c7f96d6d53ebce3109bd4",
+    "isolated_home": "/Users/oscar.renalias/Projects/skill-spec-management/.takt/agent-runs/B-cf0cbab5/home",
+    "runner_backend": "claude"
+  },
   "labels": [],
   "recovery_for": null,
   "priority": null
