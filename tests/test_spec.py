@@ -470,6 +470,22 @@ class TestCmdCreate(_TempDirTest):
         fm, _ = spec_mod.parse_frontmatter(path)
         self.assertEqual(fm["name"], "Fallback Test")
 
+    def test_create_auto_creates_missing_lifecycle_dirs(self):
+        # Remove lifecycle subdirs so only specs/ exists, simulating a
+        # partial initialisation; cmd_create must auto-create them.
+        import shutil
+        shutil.rmtree(os.path.join("specs", "drafts"))
+        shutil.rmtree(os.path.join("specs", "planned"))
+        shutil.rmtree(os.path.join("specs", "done"))
+
+        self._run_create("Auto Create Dirs Test")
+
+        # specs/drafts/ must have been created automatically
+        self.assertTrue(os.path.isdir("specs/drafts"))
+        files = os.listdir("specs/drafts")
+        self.assertEqual(len(files), 1)
+        self.assertTrue(files[0].endswith(".md"))
+
 
 # ---------------------------------------------------------------------------
 # cmd_list
