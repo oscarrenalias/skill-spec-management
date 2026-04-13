@@ -113,6 +113,15 @@
       "agent_type": "tester",
       "summary": "Worker started",
       "details": {}
+    },
+    {
+      "timestamp": "2026-04-13T07:56:28.763210+00:00",
+      "event": "guardrails_applied",
+      "agent_type": "tester",
+      "summary": "Applied guardrails from .takt/agent-runs/B-60dca703/repo/templates/agents/tester.md",
+      "details": {
+        "template_path": ".takt/agent-runs/B-60dca703/repo/templates/agents/tester.md"
+      }
     }
   ],
   "metadata": {
@@ -128,7 +137,78 @@
     ],
     "skill_bundle_hash": "bc009dcebd8e4c16178a90ec3060a5b91679ac7fedefcdc8f0d5a8eca4b06d22",
     "isolated_home": "/Users/oscar.renalias/Projects/skill-spec-management/.takt/agent-runs/B-60dca703/home",
-    "runner_backend": "claude"
+    "runner_backend": "claude",
+    "guardrails": {
+      "agent_type": "tester",
+      "template_path": ".takt/agent-runs/B-60dca703/repo/templates/agents/tester.md",
+      "template_text": "# Tester Guardrails\n\nPrimary responsibility: Add or update automated tests, run validation, and report defects or missing coverage.\n\nAllowed actions:\n- Write or update tests relevant to the assigned bead.\n- Run only the test files related to the bead's changed files, not the full test suite. Use `pytest` to target individual test files. If unsure which tests are relevant, use the bead's expected_files and touched_files fields as a guide.\n- Make minimal test-enablement fixes (e.g. import corrections, fixture setup) only when strictly necessary to run the relevant tests. Do not refactor production code under the guise of test enablement.\n\nDisallowed actions:\n- Run the full test suite instead of targeting specific tests. Always use `pytest` for targeted runs. Running the full suite wastes time and often exceeds the agent timeout.\n- Use `run_in_background` for any Bash commands. All test commands must run synchronously so their output is available before the structured verdict is submitted. Background tasks cause the structured output to be lost, resulting in a failed bead.\n- Implement feature logic beyond minimal test-enablement work.\n- Reframe a feature implementation task as testing work to bypass handoff.\n- Perform review signoff or broad documentation rewrites.\n\nExpected outputs:\n- Return JSON with structured verdict fields for every run: `verdict`, `findings_count`, and `requires_followup`.\n- Treat `verdict` as the tester signoff decision: `approved` means testing can complete, while `needs_changes` means the bead must block for follow-up work.\n- Use `verdict=approved`, `findings_count=0`, and `requires_followup=false` when testing is complete with no unresolved tester-scope findings.\n- Use `verdict=needs_changes`, set `findings_count` to the unresolved defect or coverage gap count, set `requires_followup=true` unless there is a stronger explicit reason not to, and always include `block_reason` when follow-up work is required.\n- Keep `completed`, `remaining`, and `risks` as free-form narrative context only. They inform operators, but they do not override the structured verdict or control scheduler state.\n- Completed or blocked JSON describing test coverage, validation status, and follow-up needs.\n- Precise defect or coverage notes when the bead cannot be completed within tester scope.",
+      "captured_at": "2026-04-13T07:56:28.763197+00:00"
+    },
+    "worker_prompt_context": {
+      "bead_id": "B-60dca703",
+      "feature_root_id": "B-723fabbf",
+      "title": "Add test for cmd_create auto-creating subdirs",
+      "agent_type": "tester",
+      "description": "In tests/test_spec.py inside TestCmdCreate, add a new test method that calls cmd_create after running only `os.makedirs('specs')` (no subdirs). Assert the call succeeds and the spec file appears in specs/drafts/. Also verify the existing test that exercises _require_lifecycle_dirs() still passes without modification.",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "New test test_create_auto_creates_missing_lifecycle_dirs passes",
+        "Test sets up only specs/ (no subdirs) and calls cmd_create with a title",
+        "Asserts that specs/drafts/ was created and contains exactly one .md file",
+        "Full test suite passes: python3 -m unittest discover -s tests/"
+      ],
+      "dependencies": [
+        "B-81f5fbb6"
+      ],
+      "linked_docs": [
+        "tests/test_spec.py"
+      ],
+      "execution_branch_name": "feature/b-723fabbf",
+      "execution_worktree_path": "/Users/oscar.renalias/Projects/skill-spec-management/.takt/worktrees/B-723fabbf",
+      "expected_files": [
+        ".takt/beads/.gitkeep",
+        ".takt/beads/B-547bf6c1.json",
+        ".takt/beads/B-60dca703.json",
+        ".takt/beads/B-723fabbf.json",
+        ".takt/beads/B-81f5fbb6.json",
+        ".takt/beads/B-c298ec65.json",
+        ".takt/beads/B-cf0cbab5.json",
+        "spec.py",
+        "tests/test_spec.py"
+      ],
+      "expected_globs": [],
+      "touched_files": [
+        ".takt/beads/.gitkeep",
+        ".takt/beads/B-547bf6c1.json",
+        ".takt/beads/B-60dca703.json",
+        ".takt/beads/B-723fabbf.json",
+        ".takt/beads/B-81f5fbb6.json",
+        ".takt/beads/B-c298ec65.json",
+        ".takt/beads/B-cf0cbab5.json",
+        "spec.py"
+      ],
+      "conflict_risks": "None \u2014 change is confined to a single line inside cmd_create with no shared state mutations.",
+      "handoff_summary": {
+        "completed": "",
+        "remaining": "",
+        "risks": "",
+        "verdict": "",
+        "findings_count": 0,
+        "requires_followup": false,
+        "changed_files": [],
+        "updated_docs": [],
+        "next_action": "",
+        "next_agent": "",
+        "block_reason": "",
+        "expected_files": [],
+        "expected_globs": [],
+        "touched_files": [],
+        "conflict_risks": "",
+        "design_decisions": "",
+        "test_coverage_notes": "",
+        "known_limitations": ""
+      }
+    }
   },
   "labels": [],
   "recovery_for": null,
