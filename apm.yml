@@ -6,3 +6,8 @@ dependencies:
   apm: []
   mcp: []
 scripts: {}
+compilation:
+  exclude:
+    - "specs/**"
+    - ".takt/beads/**"
+    - ".takt/memory/**"
