@@ -3,3 +3,9 @@ __pycache__/
 *.pyo
 specs/
 .claude/
+
+# takt
+.takt/worktrees/
+.takt/telemetry/
+.takt/logs/
+.takt/agent-runs/
