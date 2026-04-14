@@ -1,6 +1,7 @@
 {
-  "takt_version": "0.1.28",
+  "takt_version": "0.1.34",
   "installed_at": "2026-04-13T07:50:08.664812+00:00",
+  "upgraded_at": "2026-04-14T13:59:53.798235+00:00",
   "assets": {
     "templates/agents/merge-conflict.md": {
       "sha256": "37b9d67c3e4d10fe2fac0f86cb7ab170c5dec2a0f018264052cc4aa891a99d0f",
@@ -228,7 +229,7 @@
       "user_owned": false
     },
     ".claude/skills/takt/SKILL.md": {
-      "sha256": "1bcdba3b469c9dbd0aebcf48f3f959cf7babbbca4d4e5c40072982da0e84da8b",
+      "sha256": "5b512cc0e60e7bf9f321e927b904e630fcb9ac4c69deabcc3bab79b83dd11cb6",
       "source": "bundled",
       "user_owned": false
     },
@@ -237,45 +238,45 @@
       "source": "bundled",
       "user_owned": false
     },
-    ".claude/skills/skill-spec-management/apm.yml": {
-      "sha256": "a975c0914d2e3eb0e3ef886d2e19b27db0fa5d7cde772743d19aba7ce7a1b72e",
-      "source": "bundled",
-      "user_owned": false
-    },
     ".claude/skills/skill-spec-management/spec.py": {
-      "sha256": "28710015c49751a1df9d3813f7b690677c2f294a76b72f0b6238ceb2504a633f",
-      "source": "bundled",
-      "user_owned": false
-    },
-    ".claude/skills/skill-spec-management/README.md": {
-      "sha256": "8b7a35fc60e181d9c63d679c818d78d963feed27e740d8d4f7981552dad7b407",
+      "sha256": "0b5f2fc2cfc0a91fc80ff51e5b15d8ff96a2d60a9e0c4a5a1a6ef2a353bd4edf",
       "source": "bundled",
       "user_owned": false
     },
     ".claude/skills/skill-spec-management/SKILL.md": {
-      "sha256": "b900117dd607c17d02e4e2f2aaac5a2d77b16f79c7241567165516a9be3ec150",
-      "source": "bundled",
-      "user_owned": false
-    },
-    ".claude/skills/skill-spec-management/CLAUDE.md": {
-      "sha256": "10f9c9e62330a77e0edab781699dd8164cd35846aa1f2b8849792a8d810e473f",
-      "source": "bundled",
-      "user_owned": false
-    },
-    ".claude/skills/skill-spec-management/tests/test_spec.py": {
-      "sha256": "b6d549d5da967da06b0375f26d956c0e61adbece908c3ac2f4da1e7a6f3bc763",
-      "source": "bundled",
-      "user_owned": false
-    },
-    ".claude/skills/skill-spec-management/tests/__init__.py": {
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "5590168f0ce5b3ca7839ef9cb414f183ee37f91622c6adedc9c8afa019c1a96e",
       "source": "bundled",
       "user_owned": false
     },
     ".takt/config.yaml": {
-      "sha256": "c7988f82b2c618d7806567115d39a73f14c28f98810b03a5b2835066abaf76a2",
+      "sha256": "81b98f35fc18a51548d109315c20986a22e0d73dea196fb8c4bde00ed23bb62c",
       "source": "bundled",
       "user_owned": false
+    },
+    ".claude/skills/skill-spec-management/CLAUDE.md.disabled": {
+      "sha256": "10f9c9e62330a77e0edab781699dd8164cd35846aa1f2b8849792a8d810e473f",
+      "source": "user",
+      "user_owned": true
+    },
+    ".claude/skills/skill-spec-management/README.md.disabled": {
+      "sha256": "8b7a35fc60e181d9c63d679c818d78d963feed27e740d8d4f7981552dad7b407",
+      "source": "user",
+      "user_owned": true
+    },
+    ".claude/skills/skill-spec-management/apm.yml.disabled": {
+      "sha256": "a975c0914d2e3eb0e3ef886d2e19b27db0fa5d7cde772743d19aba7ce7a1b72e",
+      "source": "user",
+      "user_owned": true
+    },
+    ".claude/skills/skill-spec-management/tests/__init__.py.disabled": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "user",
+      "user_owned": true
+    },
+    ".claude/skills/skill-spec-management/tests/test_spec.py.disabled": {
+      "sha256": "b6d549d5da967da06b0375f26d956c0e61adbece908c3ac2f4da1e7a6f3bc763",
+      "source": "user",
+      "user_owned": true
     }
   }
 }
