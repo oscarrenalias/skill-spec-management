@@ -37,6 +37,7 @@
     ".takt/beads/B-81f5fbb6.json",
     ".takt/beads/B-c298ec65.json",
     ".takt/beads/B-cf0cbab5.json",
+    "README.md",
     "tests/test_spec.py"
   ],
   "changed_files": [
@@ -48,6 +49,7 @@
     ".takt/beads/B-81f5fbb6.json",
     ".takt/beads/B-c298ec65.json",
     ".takt/beads/B-cf0cbab5.json",
+    "README.md",
     "tests/test_spec.py"
   ],
   "updated_docs": [],
