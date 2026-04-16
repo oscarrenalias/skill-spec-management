@@ -1,5 +1,5 @@
 name: skill-spec-management
-version: 0.1.10
+version: 0.1.11
 description: Skills for managing specs in a spec-driven development workflow
 author: Renalias, Oscar
 dependencies:
