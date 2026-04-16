@@ -3,7 +3,7 @@
   "title": "Test Fix TestCmdShow: add body_only to Namespace and test --body-only flag",
   "agent_type": "tester",
   "description": "Validate implementation for B-047d81f9",
-  "status": "in_progress",
+  "status": "done",
   "bead_type": "task",
   "parent_id": "B-047d81f9",
   "dependencies": [
@@ -15,68 +15,47 @@
   "execution_branch_name": "feature/b-047d81f9",
   "execution_worktree_path": "/Users/oscar.renalias/Projects/skill-spec-management/.takt/worktrees/B-047d81f9",
   "expected_files": [
-    ".takt/beads/.gitkeep",
-    ".takt/beads/B-047d81f9.json",
-    ".takt/beads/B-547bf6c1.json",
-    ".takt/beads/B-60dca703.json",
-    ".takt/beads/B-723fabbf.json",
-    ".takt/beads/B-81f5fbb6.json",
-    ".takt/beads/B-c298ec65.json",
-    ".takt/beads/B-cf0cbab5.json",
     "tests/test_spec.py"
   ],
   "expected_globs": [],
   "touched_files": [
-    ".takt/beads/.gitkeep",
-    ".takt/beads/B-047d81f9.json",
-    ".takt/beads/B-547bf6c1.json",
-    ".takt/beads/B-60dca703.json",
-    ".takt/beads/B-723fabbf.json",
-    ".takt/beads/B-81f5fbb6.json",
-    ".takt/beads/B-c298ec65.json",
-    ".takt/beads/B-cf0cbab5.json",
     "tests/test_spec.py"
   ],
   "changed_files": [
-    ".takt/beads/.gitkeep",
-    ".takt/beads/B-047d81f9.json",
-    ".takt/beads/B-547bf6c1.json",
-    ".takt/beads/B-60dca703.json",
-    ".takt/beads/B-723fabbf.json",
-    ".takt/beads/B-81f5fbb6.json",
-    ".takt/beads/B-c298ec65.json",
-    ".takt/beads/B-cf0cbab5.json",
     "tests/test_spec.py"
   ],
   "updated_docs": [],
   "handoff_summary": {
-    "completed": "",
-    "remaining": "",
-    "risks": "",
-    "verdict": "",
+    "completed": "Ran pytest against tests/test_spec.py::TestCmdShow. All 4 tests passed: test_body_only_omits_frontmatter, test_legacy_spec_prints_warning, test_nonexistent_spec_exits_1, test_shows_frontmatter_block.",
+    "remaining": "None.",
+    "risks": "None identified.",
+    "verdict": "approved",
     "findings_count": 0,
     "requires_followup": false,
-    "changed_files": [],
+    "changed_files": [
+      "tests/test_spec.py"
+    ],
     "updated_docs": [],
-    "next_action": "",
+    "next_action": "None \u2014 bead is complete.",
     "next_agent": "",
     "block_reason": "",
-    "expected_files": [],
+    "expected_files": [
+      "tests/test_spec.py"
+    ],
     "expected_globs": [],
-    "touched_files": [],
-    "conflict_risks": "",
-    "design_decisions": "",
-    "test_coverage_notes": "",
+    "touched_files": [
+      "tests/test_spec.py"
+    ],
+    "conflict_risks": "None \u2014 only tests/test_spec.py touched.",
+    "design_decisions": "_run_show helper in TestCmdShow now accepts body_only parameter and passes it to argparse.Namespace, matching the implementation's expected interface.",
+    "test_coverage_notes": "test_body_only_omits_frontmatter verifies --body-only outputs body content and excludes frontmatter delimiters (---). Three existing tests continue to pass unchanged.",
     "known_limitations": ""
   },
   "block_reason": "",
-  "conflict_risks": "None \u2014 only tests/test_spec.py modified.",
+  "conflict_risks": "None \u2014 only tests/test_spec.py touched.",
   "branch_name": "feature/b-047d81f9",
   "worktree_path": "/Users/oscar.renalias/Projects/skill-spec-management/.takt/worktrees/B-047d81f9",
-  "lease": {
-    "owner": "tester:B-047d81f9-test",
-    "expires_at": "2026-04-16T16:16:39.927211+00:00"
-  },
+  "lease": null,
   "retries": 0,
   "execution_history": [
     {
@@ -117,6 +96,13 @@
       "details": {
         "template_path": ".takt/agent-runs/B-047d81f9-test/repo/templates/agents/tester.md"
       }
+    },
+    {
+      "timestamp": "2026-04-16T15:47:10.684887+00:00",
+      "event": "completed",
+      "agent_type": "tester",
+      "summary": "All TestCmdShow tests pass (4/4), including the new test_body_only_omits_frontmatter that validates the --body-only flag strips frontmatter from cmd_show output.",
+      "details": {}
     }
   ],
   "metadata": {
@@ -197,7 +183,52 @@
         "test_coverage_notes": "",
         "known_limitations": ""
       }
-    }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "All TestCmdShow tests pass (4/4), including the new test_body_only_omits_frontmatter that validates the --body-only flag strips frontmatter from cmd_show output.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.14683274999999998,
+      "duration_ms": 29182,
+      "duration_api_ms": 22562,
+      "num_turns": 4,
+      "input_tokens": 6,
+      "output_tokens": 1076,
+      "cache_creation_tokens": 25493,
+      "cache_read_tokens": 107610,
+      "stop_reason": "end_turn",
+      "session_id": "355051b6-534f-4f14-967b-ff588e6011d0",
+      "permission_denials": [],
+      "prompt_chars": 7586,
+      "prompt_lines": 164,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.14683274999999998,
+        "duration_ms": 29182,
+        "duration_api_ms": 22562,
+        "num_turns": 4,
+        "input_tokens": 6,
+        "output_tokens": 1076,
+        "cache_creation_tokens": 25493,
+        "cache_read_tokens": 107610,
+        "stop_reason": "end_turn",
+        "session_id": "355051b6-534f-4f14-967b-ff588e6011d0",
+        "permission_denials": [],
+        "prompt_chars": 7586,
+        "prompt_lines": 164,
+        "source": "provider",
+        "attempt": 1
+      }
+    ]
   },
   "labels": [],
   "recovery_for": null,
