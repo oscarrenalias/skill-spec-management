@@ -3,7 +3,7 @@
   "title": "Fix TestCmdShow: add body_only to Namespace and test --body-only flag",
   "agent_type": "developer",
   "description": "tests/test_spec.py line 574: _run_show creates argparse.Namespace(spec=..., full=...) without body_only, causing AttributeError in cmd_show when it accesses args.body_only. Fix: (1) add body_only=False to the Namespace in _run_show; (2) add test_body_only_omits_frontmatter that calls _run_show with body_only=True and asserts body is present but frontmatter delimiters are absent.",
-  "status": "ready",
+  "status": "in_progress",
   "bead_type": "task",
   "parent_id": null,
   "dependencies": [],
@@ -45,9 +45,12 @@
   },
   "block_reason": "",
   "conflict_risks": "",
-  "branch_name": "",
-  "worktree_path": "",
-  "lease": null,
+  "branch_name": "feature/b-047d81f9",
+  "worktree_path": "/Users/oscar.renalias/Projects/skill-spec-management/.takt/worktrees/B-047d81f9",
+  "lease": {
+    "owner": "developer:B-047d81f9",
+    "expires_at": "2026-04-16T16:15:44.501269+00:00"
+  },
   "retries": 0,
   "execution_history": [
     {
@@ -56,9 +59,48 @@
       "agent_type": "scheduler",
       "summary": "Bead created",
       "details": {}
+    },
+    {
+      "timestamp": "2026-04-16T15:45:45.469484+00:00",
+      "event": "skills_loaded",
+      "agent_type": "developer",
+      "summary": "Loaded 7 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/developer-implementation",
+          "capability/code-edit",
+          "task/corrective-implementation",
+          "task/refactor-safe",
+          "task/migration",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-04-16T15:45:45.469509+00:00",
+      "event": "started",
+      "agent_type": "developer",
+      "summary": "Worker started",
+      "details": {}
     }
   ],
-  "metadata": {},
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/skill-spec-management/.takt/agent-runs/B-047d81f9",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/developer-implementation",
+      "capability/code-edit",
+      "task/corrective-implementation",
+      "task/refactor-safe",
+      "task/migration",
+      "memory"
+    ],
+    "skill_bundle_hash": "2cbacb3ae07c8eee2a6bb3d65b99b3e4df7fa47ac8b10c5c68be4b338a583348",
+    "isolated_home": "/Users/oscar.renalias/Projects/skill-spec-management/.takt/agent-runs/B-047d81f9/home",
+    "runner_backend": "claude"
+  },
   "labels": [],
   "recovery_for": null,
   "priority": null
