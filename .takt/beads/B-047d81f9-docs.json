@@ -3,7 +3,7 @@
   "title": "Document Fix TestCmdShow: add body_only to Namespace and test --body-only flag",
   "agent_type": "documentation",
   "description": "Update docs for B-047d81f9",
-  "status": "in_progress",
+  "status": "done",
   "bead_type": "task",
   "parent_id": "B-047d81f9",
   "dependencies": [
@@ -15,68 +15,53 @@
   "execution_branch_name": "feature/b-047d81f9",
   "execution_worktree_path": "/Users/oscar.renalias/Projects/skill-spec-management/.takt/worktrees/B-047d81f9",
   "expected_files": [
-    ".takt/beads/.gitkeep",
-    ".takt/beads/B-047d81f9.json",
-    ".takt/beads/B-547bf6c1.json",
-    ".takt/beads/B-60dca703.json",
-    ".takt/beads/B-723fabbf.json",
-    ".takt/beads/B-81f5fbb6.json",
-    ".takt/beads/B-c298ec65.json",
-    ".takt/beads/B-cf0cbab5.json",
-    "tests/test_spec.py"
+    "README.md",
+    ".apm/skills/skill-spec-management/SKILL.md"
   ],
   "expected_globs": [],
   "touched_files": [
-    ".takt/beads/.gitkeep",
-    ".takt/beads/B-047d81f9.json",
-    ".takt/beads/B-547bf6c1.json",
-    ".takt/beads/B-60dca703.json",
-    ".takt/beads/B-723fabbf.json",
-    ".takt/beads/B-81f5fbb6.json",
-    ".takt/beads/B-c298ec65.json",
-    ".takt/beads/B-cf0cbab5.json",
-    "tests/test_spec.py"
+    "README.md"
   ],
   "changed_files": [
-    ".takt/beads/.gitkeep",
-    ".takt/beads/B-047d81f9.json",
-    ".takt/beads/B-547bf6c1.json",
-    ".takt/beads/B-60dca703.json",
-    ".takt/beads/B-723fabbf.json",
-    ".takt/beads/B-81f5fbb6.json",
-    ".takt/beads/B-c298ec65.json",
-    ".takt/beads/B-cf0cbab5.json",
-    "tests/test_spec.py"
+    "README.md"
   ],
-  "updated_docs": [],
+  "updated_docs": [
+    "README.md"
+  ],
   "handoff_summary": {
-    "completed": "",
-    "remaining": "",
-    "risks": "",
-    "verdict": "",
+    "completed": "Added `show --body-only <spec>` entry to README.md CLI reference table. SKILL.md already documented the flag correctly at line 96/102.",
+    "remaining": "None.",
+    "risks": "None \u2014 documentation-only change.",
+    "verdict": "approved",
     "findings_count": 0,
     "requires_followup": false,
-    "changed_files": [],
-    "updated_docs": [],
-    "next_action": "",
+    "changed_files": [
+      "README.md"
+    ],
+    "updated_docs": [
+      "README.md"
+    ],
+    "next_action": "None required.",
     "next_agent": "",
     "block_reason": "",
-    "expected_files": [],
+    "expected_files": [
+      "README.md",
+      ".apm/skills/skill-spec-management/SKILL.md"
+    ],
     "expected_globs": [],
-    "touched_files": [],
-    "conflict_risks": "",
-    "design_decisions": "",
-    "test_coverage_notes": "",
+    "touched_files": [
+      "README.md"
+    ],
+    "conflict_risks": "None \u2014 only README.md modified, no overlap with sibling beads.",
+    "design_decisions": "SKILL.md already had accurate `--body-only` documentation; only README.md needed the new table row.",
+    "test_coverage_notes": "tests/test_spec.py already covers `--body-only` via TestCmdShow.test_body_only_omits_frontmatter.",
     "known_limitations": ""
   },
-  "block_reason": "file-scope conflict with in-progress B-047d81f9-test",
-  "conflict_risks": "None \u2014 only tests/test_spec.py modified.",
+  "block_reason": "",
+  "conflict_risks": "None \u2014 only README.md modified, no overlap with sibling beads.",
   "branch_name": "feature/b-047d81f9",
   "worktree_path": "/Users/oscar.renalias/Projects/skill-spec-management/.takt/worktrees/B-047d81f9",
-  "lease": {
-    "owner": "documentation:B-047d81f9-docs",
-    "expires_at": "2026-04-16T16:17:11.154847+00:00"
-  },
+  "lease": null,
   "retries": 0,
   "execution_history": [
     {
@@ -124,6 +109,13 @@
       "details": {
         "template_path": ".takt/agent-runs/B-047d81f9-docs/repo/templates/agents/documentation.md"
       }
+    },
+    {
+      "timestamp": "2026-04-16T15:47:52.295786+00:00",
+      "event": "completed",
+      "agent_type": "documentation",
+      "summary": "Added missing `show --body-only` row to README.md CLI reference table; SKILL.md was already accurate.",
+      "details": {}
     }
   ],
   "metadata": {
@@ -204,7 +196,53 @@
         "test_coverage_notes": "",
         "known_limitations": ""
       }
-    }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Added missing `show --body-only` row to README.md CLI reference table; SKILL.md was already accurate.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.13089915000000002,
+      "duration_ms": 39333,
+      "duration_api_ms": 36841,
+      "num_turns": 10,
+      "input_tokens": 9,
+      "output_tokens": 2074,
+      "cache_creation_tokens": 13575,
+      "cache_read_tokens": 154103,
+      "stop_reason": "end_turn",
+      "session_id": "f765d4eb-3169-41a9-8964-a910a613387c",
+      "permission_denials": [],
+      "prompt_chars": 6928,
+      "prompt_lines": 167,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.13089915000000002,
+        "duration_ms": 39333,
+        "duration_api_ms": 36841,
+        "num_turns": 10,
+        "input_tokens": 9,
+        "output_tokens": 2074,
+        "cache_creation_tokens": 13575,
+        "cache_read_tokens": 154103,
+        "stop_reason": "end_turn",
+        "session_id": "f765d4eb-3169-41a9-8964-a910a613387c",
+        "permission_denials": [],
+        "prompt_chars": 6928,
+        "prompt_lines": 167,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "02f16cef79a451af406b8b3a0f5a1d5845c950de"
   },
   "labels": [],
   "recovery_for": null,
