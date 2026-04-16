@@ -570,8 +570,8 @@ class TestCmdShow(_TempDirTest):
         super().setUp()
         self._init_specs()
 
-    def _run_show(self, spec_query: str, full: bool = False):
-        args = argparse.Namespace(spec=spec_query, full=full)
+    def _run_show(self, spec_query: str, full: bool = False, body_only: bool = False):
+        args = argparse.Namespace(spec=spec_query, full=full, body_only=body_only)
         spec_mod.cmd_show(args)
 
     def test_shows_frontmatter_block(self):
@@ -594,6 +594,19 @@ class TestCmdShow(_TempDirTest):
             with self.assertRaises(SystemExit) as cm:
                 self._run_show("does-not-exist")
             self.assertEqual(cm.exception.code, 1)
+
+    def test_body_only_omits_frontmatter(self):
+        _make_spec(
+            os.path.join("specs", "drafts", "body-only-spec.md"),
+            name="Body Only",
+            spec_id="spec-body01",
+            extra_body="## Details\n\nsome content here\n",
+        )
+        with patch("sys.stdout", new_callable=io.StringIO) as mock_out:
+            self._run_show("spec-body01", body_only=True)
+            output = mock_out.getvalue()
+            self.assertIn("some content here", output)
+            self.assertNotIn("---", output)
 
 
 # ---------------------------------------------------------------------------
