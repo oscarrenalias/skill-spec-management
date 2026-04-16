@@ -3,7 +3,7 @@
   "title": "Fix TestCmdShow: add body_only to Namespace and test --body-only flag",
   "agent_type": "developer",
   "description": "tests/test_spec.py line 574: _run_show creates argparse.Namespace(spec=..., full=...) without body_only, causing AttributeError in cmd_show when it accesses args.body_only. Fix: (1) add body_only=False to the Namespace in _run_show; (2) add test_body_only_omits_frontmatter that calls _run_show with body_only=True and asserts body is present but frontmatter delimiters are absent.",
-  "status": "in_progress",
+  "status": "done",
   "bead_type": "task",
   "parent_id": null,
   "dependencies": [],
@@ -20,37 +20,76 @@
     "tests/test_spec.py"
   ],
   "expected_globs": [],
-  "touched_files": [],
-  "changed_files": [],
+  "touched_files": [
+    ".takt/beads/.gitkeep",
+    ".takt/beads/B-047d81f9.json",
+    ".takt/beads/B-547bf6c1.json",
+    ".takt/beads/B-60dca703.json",
+    ".takt/beads/B-723fabbf.json",
+    ".takt/beads/B-81f5fbb6.json",
+    ".takt/beads/B-c298ec65.json",
+    ".takt/beads/B-cf0cbab5.json",
+    "tests/test_spec.py"
+  ],
+  "changed_files": [
+    ".takt/beads/.gitkeep",
+    ".takt/beads/B-047d81f9.json",
+    ".takt/beads/B-547bf6c1.json",
+    ".takt/beads/B-60dca703.json",
+    ".takt/beads/B-723fabbf.json",
+    ".takt/beads/B-81f5fbb6.json",
+    ".takt/beads/B-c298ec65.json",
+    ".takt/beads/B-cf0cbab5.json",
+    "tests/test_spec.py"
+  ],
   "updated_docs": [],
   "handoff_summary": {
-    "completed": "",
+    "completed": "Added body_only=False parameter to _run_show helper; added test_body_only_omits_frontmatter test in TestCmdShow.",
     "remaining": "",
-    "risks": "",
-    "verdict": "",
+    "risks": "None.",
+    "verdict": "approved",
     "findings_count": 0,
     "requires_followup": false,
-    "changed_files": [],
+    "changed_files": [
+      ".takt/beads/.gitkeep",
+      ".takt/beads/B-047d81f9.json",
+      ".takt/beads/B-547bf6c1.json",
+      ".takt/beads/B-60dca703.json",
+      ".takt/beads/B-723fabbf.json",
+      ".takt/beads/B-81f5fbb6.json",
+      ".takt/beads/B-c298ec65.json",
+      ".takt/beads/B-cf0cbab5.json",
+      "tests/test_spec.py"
+    ],
     "updated_docs": [],
-    "next_action": "",
-    "next_agent": "",
+    "next_action": "Run tester agent to validate all tests pass.",
+    "next_agent": "tester",
     "block_reason": "",
-    "expected_files": [],
+    "expected_files": [
+      "tests/test_spec.py"
+    ],
     "expected_globs": [],
-    "touched_files": [],
-    "conflict_risks": "",
-    "design_decisions": "",
-    "test_coverage_notes": "",
+    "touched_files": [
+      ".takt/beads/.gitkeep",
+      ".takt/beads/B-047d81f9.json",
+      ".takt/beads/B-547bf6c1.json",
+      ".takt/beads/B-60dca703.json",
+      ".takt/beads/B-723fabbf.json",
+      ".takt/beads/B-81f5fbb6.json",
+      ".takt/beads/B-c298ec65.json",
+      ".takt/beads/B-cf0cbab5.json",
+      "tests/test_spec.py"
+    ],
+    "conflict_risks": "None \u2014 only tests/test_spec.py modified.",
+    "design_decisions": "Used existing extra_body parameter of _make_spec (not body) to inject content for the --body-only assertion.",
+    "test_coverage_notes": "New test test_body_only_omits_frontmatter covers the --body-only path in cmd_show.",
     "known_limitations": ""
   },
   "block_reason": "",
-  "conflict_risks": "",
+  "conflict_risks": "None \u2014 only tests/test_spec.py modified.",
   "branch_name": "feature/b-047d81f9",
   "worktree_path": "/Users/oscar.renalias/Projects/skill-spec-management/.takt/worktrees/B-047d81f9",
-  "lease": {
-    "owner": "developer:B-047d81f9",
-    "expires_at": "2026-04-16T16:15:44.501269+00:00"
-  },
+  "lease": null,
   "retries": 0,
   "execution_history": [
     {
@@ -92,6 +131,13 @@
       "details": {
         "template_path": ".takt/agent-runs/B-047d81f9/repo/templates/agents/developer.md"
       }
+    },
+    {
+      "timestamp": "2026-04-16T15:46:37.379835+00:00",
+      "event": "completed",
+      "agent_type": "developer",
+      "summary": "Fixed _run_show to include body_only=False in the Namespace, and added test_body_only_omits_frontmatter that verifies --body-only outputs body content without --- frontmatter delimiters.",
+      "details": {}
     }
   ],
   "metadata": {
@@ -157,7 +203,53 @@
         "test_coverage_notes": "",
         "known_limitations": ""
       }
-    }
+    },
+    "last_agent_result": {
+      "outcome": "completed",
+      "summary": "Fixed _run_show to include body_only=False in the Namespace, and added test_body_only_omits_frontmatter that verifies --body-only outputs body content without --- frontmatter delimiters.",
+      "verdict": "approved",
+      "findings_count": 0,
+      "requires_followup": false,
+      "next_agent": "tester",
+      "block_reason": ""
+    },
+    "telemetry": {
+      "cost_usd": 0.2265715,
+      "duration_ms": 50357,
+      "duration_api_ms": 45969,
+      "num_turns": 12,
+      "input_tokens": 14,
+      "output_tokens": 2803,
+      "cache_creation_tokens": 27730,
+      "cache_read_tokens": 261390,
+      "stop_reason": "end_turn",
+      "session_id": "e3ced8d7-310b-48ba-84c5-f5e841e63c8d",
+      "permission_denials": [],
+      "prompt_chars": 5657,
+      "prompt_lines": 128,
+      "source": "provider",
+      "attempt": 1
+    },
+    "telemetry_history": [
+      {
+        "cost_usd": 0.2265715,
+        "duration_ms": 50357,
+        "duration_api_ms": 45969,
+        "num_turns": 12,
+        "input_tokens": 14,
+        "output_tokens": 2803,
+        "cache_creation_tokens": 27730,
+        "cache_read_tokens": 261390,
+        "stop_reason": "end_turn",
+        "session_id": "e3ced8d7-310b-48ba-84c5-f5e841e63c8d",
+        "permission_denials": [],
+        "prompt_chars": 5657,
+        "prompt_lines": 128,
+        "source": "provider",
+        "attempt": 1
+      }
+    ],
+    "last_commit": "e193f0b46afd133d92dc0876e081a7a418357b64"
   },
   "labels": [],
   "recovery_for": null,
