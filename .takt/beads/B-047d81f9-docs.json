@@ -1,0 +1,91 @@
+{
+  "bead_id": "B-047d81f9-docs",
+  "title": "Document Fix TestCmdShow: add body_only to Namespace and test --body-only flag",
+  "agent_type": "documentation",
+  "description": "Update docs for B-047d81f9",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": "B-047d81f9",
+  "dependencies": [
+    "B-047d81f9"
+  ],
+  "acceptance_criteria": [],
+  "linked_docs": [],
+  "feature_root_id": "B-047d81f9",
+  "execution_branch_name": "feature/b-047d81f9",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/skill-spec-management/.takt/worktrees/B-047d81f9",
+  "expected_files": [
+    ".takt/beads/.gitkeep",
+    ".takt/beads/B-047d81f9.json",
+    ".takt/beads/B-547bf6c1.json",
+    ".takt/beads/B-60dca703.json",
+    ".takt/beads/B-723fabbf.json",
+    ".takt/beads/B-81f5fbb6.json",
+    ".takt/beads/B-c298ec65.json",
+    ".takt/beads/B-cf0cbab5.json",
+    "tests/test_spec.py"
+  ],
+  "expected_globs": [],
+  "touched_files": [
+    ".takt/beads/.gitkeep",
+    ".takt/beads/B-047d81f9.json",
+    ".takt/beads/B-547bf6c1.json",
+    ".takt/beads/B-60dca703.json",
+    ".takt/beads/B-723fabbf.json",
+    ".takt/beads/B-81f5fbb6.json",
+    ".takt/beads/B-c298ec65.json",
+    ".takt/beads/B-cf0cbab5.json",
+    "tests/test_spec.py"
+  ],
+  "changed_files": [
+    ".takt/beads/.gitkeep",
+    ".takt/beads/B-047d81f9.json",
+    ".takt/beads/B-547bf6c1.json",
+    ".takt/beads/B-60dca703.json",
+    ".takt/beads/B-723fabbf.json",
+    ".takt/beads/B-81f5fbb6.json",
+    ".takt/beads/B-c298ec65.json",
+    ".takt/beads/B-cf0cbab5.json",
+    "tests/test_spec.py"
+  ],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "None \u2014 only tests/test_spec.py modified.",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-04-16T15:46:38.377771+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
