@@ -3,7 +3,7 @@
   "title": "Review Fix TestCmdShow: add body_only to Namespace and test --body-only flag",
   "agent_type": "review",
   "description": "Review implementation for B-047d81f9",
-  "status": "ready",
+  "status": "in_progress",
   "bead_type": "task",
   "parent_id": "B-047d81f9",
   "dependencies": [
@@ -75,9 +75,12 @@
   },
   "block_reason": "",
   "conflict_risks": "None \u2014 only tests/test_spec.py modified.",
-  "branch_name": "",
+  "branch_name": "feature/b-047d81f9",
   "worktree_path": "",
-  "lease": null,
+  "lease": {
+    "owner": "review:B-047d81f9-review",
+    "expires_at": "2026-04-16T16:17:53.073389+00:00"
+  },
   "retries": 0,
   "execution_history": [
     {
@@ -86,9 +89,46 @@
       "agent_type": "scheduler",
       "summary": "Bead created",
       "details": {}
+    },
+    {
+      "timestamp": "2026-04-16T15:47:53.427185+00:00",
+      "event": "skills_loaded",
+      "agent_type": "review",
+      "summary": "Loaded 6 skill(s) for isolated execution",
+      "details": {
+        "loaded_skills": [
+          "core/base-orchestrator",
+          "role/reviewer-signoff",
+          "capability/code-review",
+          "task/corrective-bead-creation",
+          "task/risk-assessment",
+          "memory"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-04-16T15:47:53.427205+00:00",
+      "event": "started",
+      "agent_type": "review",
+      "summary": "Worker started",
+      "details": {}
     }
   ],
-  "metadata": {},
+  "metadata": {
+    "execution_root": "/Users/oscar.renalias/Projects/skill-spec-management/.takt/agent-runs/B-047d81f9-review",
+    "workspace_repo_path": "repo",
+    "loaded_skills": [
+      "core/base-orchestrator",
+      "role/reviewer-signoff",
+      "capability/code-review",
+      "task/corrective-bead-creation",
+      "task/risk-assessment",
+      "memory"
+    ],
+    "skill_bundle_hash": "e49ae02cdd641b1b539810ca3dc9f7cb45c7fa56ae2c7f96d6d53ebce3109bd4",
+    "isolated_home": "/Users/oscar.renalias/Projects/skill-spec-management/.takt/agent-runs/B-047d81f9-review/home",
+    "runner_backend": "claude"
+  },
   "labels": [],
   "recovery_for": null,
   "priority": null
