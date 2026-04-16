@@ -62,7 +62,27 @@ The three built-in statuses (`draft`, `planned`, `done`) map to specific folders
 
 Custom statuses update the frontmatter, and the skill will move the file to a folder corresponding to its status. If the folder does not exist, it will be automatically created.
 
-### 4. Migrating existing specs
+### 4. Review a spec before planning
+
+Before moving a spec from `draft` to `planned`, use the **spec-reviewer** agent to check it for quality and completeness:
+
+> "Review the auth spec before we plan it."
+
+The agent evaluates the spec body across five dimensions — Purpose, Problem statement, Actionability, Verifiability, and Scope clarity — and returns a structured verdict:
+
+- **`pass`** — the spec is ready to plan and implement.
+- **`needs-work`** — one or more dimensions are too vague; targeted improvements needed before planning.
+- **`incomplete`** — the spec lacks enough substance to act on; significant rework required.
+
+The report includes per-dimension ratings, the top issues found, and concrete rewrite suggestions. Use the feedback to tighten the spec, then re-run the review until you get a `pass`.
+
+The recommended flow is:
+
+```
+draft → [spec-reviewer] → needs-work → revise → [spec-reviewer] → pass → planned → done
+```
+
+### 5. Migrating existing specs
 
 > "I have some existing spec files without frontmatter — can you migrate them?"
 
