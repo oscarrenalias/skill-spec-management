@@ -23,6 +23,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Bump patch version and push tag
+        id: versioning
         run: |
           git fetch --tags
           latest=$(git tag -l 'v*.*.*' | sort -V | tail -1)
@@ -44,3 +45,17 @@ jobs:
           git push
           git tag "$new_tag"
           git push origin "$new_tag"
+          echo "new_tag=${new_tag}" >> "$GITHUB_OUTPUT"
+      - name: Create zip and publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          new_tag="${{ steps.versioning.outputs.new_tag }}"
+          zip_name="skill-spec-management-${new_tag}.zip"
+          cd .apm/skills
+          zip -r "../../${zip_name}" skill-spec-management/
+          cd ../..
+          gh release create "$new_tag" \
+            --title "skill-spec-management ${new_tag}" \
+            --generate-notes \
+            "${zip_name}"

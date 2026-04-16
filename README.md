@@ -4,6 +4,71 @@ An opinionated spec management skill for spec-driven development workflows. It p
 
 Specs are Markdown files with YAML frontmatter. They live in a three-stage folder hierarchy (`drafts/` → `planned/` → `done/`) and are the single source of truth for what is being built, why, and when it's done. It also possible to use custom status values, e.g., "blocked", "postponed", the CLI will deal with that just fine but the skill enforces the default workflow.
 
+## Installation
+
+### Via APM
+
+```bash
+apm install oscarrenalias/skill-spec-management
+```
+
+APM will copy the skill into every detected target directory (`.github/`, `.claude/`, `.cursor/`, etc.).
+
+### Via zip package (no APM required)
+
+Each release ships a zip archive containing the skill. Download it from the [Releases page](https://github.com/oscarrenalias/skill-spec-management/releases) and unzip it into your project's skills folder:
+
+```bash
+# Claude Code
+unzip skill-spec-management-vX.Y.Z.zip -d .claude/skills/
+
+# GitHub Copilot / Codex
+unzip skill-spec-management-vX.Y.Z.zip -d .github/skills/
+```
+
+The zip contains a `skill-spec-management/` directory with `SKILL.md` and `spec.py`. The skill is picked up automatically on the next session.
+
+## Onboarding a New Project
+
+All spec operations are handled by the agent — just describe what you want in natural language.
+
+### 1. Initialise the specs folder
+
+> "Please initialise the specs folder for this project."
+
+The agent creates `specs/drafts/`, `specs/planned/`, and `specs/done/`. If `specs/` already exists, this step can be skipped — the `create` command auto-creates any missing subdirectories.
+
+### 2. Create your first spec
+
+> "Create a spec for adding OAuth login support."
+
+The agent creates a structured draft in `specs/drafts/` with a generated ID and prompts you to fill in the key sections: **Objective**, **Problems to Fix**, **Changes**, **Files to Modify**, **Acceptance Criteria**, and **Pending Decisions**.
+
+### 3. Manage the lifecycle
+
+> "Show me all the specs currently in draft."
+
+> "Mark spec-a3f19c2b as planned."
+
+> "What specs are blocked or high priority?"
+
+The agent moves specs between `drafts/` → `planned/` → `done/` as work progresses, keeping frontmatter and filesystem location in sync.
+
+The three built-in statuses (`draft`, `planned`, `done`) map to specific folders and drive the default workflow. The skill also accepts any custom status string — useful for tracking states like `blocked` or `postponed` that don't map to a lifecycle folder:
+
+> "Mark spec-a3f19c2b as blocked."
+
+> "Set the status of the auth spec to postponed."
+
+Custom statuses update the frontmatter, and the skill will move the file to a folder corresponding to its status. If the folder does not exist, it will be automatically created.
+
+### 4. Migrating existing specs
+
+> "I have some existing spec files without frontmatter — can you migrate them?"
+
+The agent adds a generated ID, infers the name from the first heading or filename, and sets the status from each file's current folder.
+
+
 ## CLI Reference
 
 Run `spec.py` from the project root (where `specs/` lives):
@@ -34,86 +99,3 @@ python3 spec.py <subcommand> [args]
 `<spec>` can be a full spec ID (e.g. `spec-a3f19c2b`) or a partial filename substring.
 
 `spec.py` has no external dependencies — it runs with the Python standard library only.
-
-## Onboarding a New Project
-
-### 1. Install the skill
-
-Via APM or by cloning — see [Installation](#installation) below.
-
-### 2. Initialise the specs folder
-
-Run this once from the project root:
-
-```bash
-python3 spec.py init
-```
-
-This creates:
-
-```
-specs/
-├── drafts/
-├── planned/
-└── done/
-```
-
-> **Tip:** If `specs/` already exists (e.g. cloned from another project), you can skip `init`. The `create` command will auto-create any missing lifecycle subdirectories on first use.
-
-### 3. Create your first spec
-
-```bash
-python3 spec.py create "My First Feature"
-# Created specs/drafts/my-first-feature.md
-# ID: spec-a3f19c2b
-```
-
-Open the generated file and fill in the sections: **Objective**, **Problems to Fix**, **Changes**, **Files to Modify**, **Acceptance Criteria**, and **Pending Decisions**.
-
-### 4. Manage the lifecycle
-
-```bash
-# List all specs
-python3 spec.py list
-
-# Move a spec forward when ready
-python3 spec.py set status planned spec-a3f19c2b
-python3 spec.py set status done    spec-a3f19c2b
-```
-
-### Migrating existing specs
-
-If you have existing Markdown specs without frontmatter, migrate them in place:
-
-```bash
-python3 spec.py migrate my-old-spec
-```
-
-This adds a generated ID, infers the name from the first heading or filename, and sets the status from the file's current folder.
-
-## Installation
-
-### Via APM
-
-```bash
-apm install oscarrenalias/skill-spec-management
-```
-
-APM will copy the skill into every detected target directory (`.github/`, `.claude/`, `.cursor/`, etc.).
-
-### As a Native Claude Skill
-
-Copy `SKILL.md` and `spec.py` into your project's skills folder:
-
-```bash
-mkdir -p .claude/skills/spec-management
-cp SKILL.md spec.py .claude/skills/spec-management/
-```
-
-Or clone the repo and reference it directly:
-
-```bash
-git clone https://github.com/oscarrenalias/skill-spec-management .claude/skills/spec-management
-```
-
-Claude will pick up the skill automatically on the next session.
