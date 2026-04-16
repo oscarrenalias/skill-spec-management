@@ -20,13 +20,13 @@ Each release ships a zip archive containing the skill. Download it from the [Rel
 
 ```bash
 # Claude Code
-unzip skill-spec-management-vX.Y.Z.zip -d .claude/skills/
+unzip skill-spec-management-vX.Y.Z.zip -d .claude/
 
 # GitHub Copilot / Codex
-unzip skill-spec-management-vX.Y.Z.zip -d .github/skills/
+unzip skill-spec-management-vX.Y.Z.zip -d .github/
 ```
 
-The zip contains a `skill-spec-management/` directory with `SKILL.md` and `spec.py`. The skill is picked up automatically on the next session.
+The zip contains `skills/skill-spec-management/` and `agents/` directories, which unzip directly into the right locations. The skill and agent are picked up automatically on the next session.
 
 ## Onboarding a New Project
 

@@ -52,9 +52,9 @@ jobs:
         run: |
           new_tag="${{ steps.versioning.outputs.new_tag }}"
           zip_name="skill-spec-management-${new_tag}.zip"
-          cd .apm/skills
-          zip -r "../../${zip_name}" skill-spec-management/
-          cd ../..
+          cd .apm
+          zip -r "../${zip_name}" skills/ agents/
+          cd ..
           gh release create "$new_tag" \
             --title "skill-spec-management ${new_tag}" \
             --generate-notes \
