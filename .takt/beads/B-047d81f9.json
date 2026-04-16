@@ -1,0 +1,65 @@
+{
+  "bead_id": "B-047d81f9",
+  "title": "Fix TestCmdShow: add body_only to Namespace and test --body-only flag",
+  "agent_type": "developer",
+  "description": "tests/test_spec.py line 574: _run_show creates argparse.Namespace(spec=..., full=...) without body_only, causing AttributeError in cmd_show when it accesses args.body_only. Fix: (1) add body_only=False to the Namespace in _run_show; (2) add test_body_only_omits_frontmatter that calls _run_show with body_only=True and asserts body is present but frontmatter delimiters are absent.",
+  "status": "ready",
+  "bead_type": "task",
+  "parent_id": null,
+  "dependencies": [],
+  "acceptance_criteria": [
+    "AttributeError on args.body_only is gone",
+    "All existing tests still pass",
+    "New test test_body_only_omits_frontmatter passes: body present, no --- delimiters in output"
+  ],
+  "linked_docs": [],
+  "feature_root_id": "B-047d81f9",
+  "execution_branch_name": "feature/b-047d81f9",
+  "execution_worktree_path": "/Users/oscar.renalias/Projects/skill-spec-management/.takt/worktrees/B-047d81f9",
+  "expected_files": [
+    "tests/test_spec.py"
+  ],
+  "expected_globs": [],
+  "touched_files": [],
+  "changed_files": [],
+  "updated_docs": [],
+  "handoff_summary": {
+    "completed": "",
+    "remaining": "",
+    "risks": "",
+    "verdict": "",
+    "findings_count": 0,
+    "requires_followup": false,
+    "changed_files": [],
+    "updated_docs": [],
+    "next_action": "",
+    "next_agent": "",
+    "block_reason": "",
+    "expected_files": [],
+    "expected_globs": [],
+    "touched_files": [],
+    "conflict_risks": "",
+    "design_decisions": "",
+    "test_coverage_notes": "",
+    "known_limitations": ""
+  },
+  "block_reason": "",
+  "conflict_risks": "",
+  "branch_name": "",
+  "worktree_path": "",
+  "lease": null,
+  "retries": 0,
+  "execution_history": [
+    {
+      "timestamp": "2026-04-16T15:45:40.589003+00:00",
+      "event": "created",
+      "agent_type": "scheduler",
+      "summary": "Bead created",
+      "details": {}
+    }
+  ],
+  "metadata": {},
+  "labels": [],
+  "recovery_for": null,
+  "priority": null
+}
