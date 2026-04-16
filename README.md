@@ -87,6 +87,7 @@ python3 spec.py <subcommand> [args]
 | `list --priority <p>` | Filter by priority (`high`, `medium`, `low`) |
 | `show <spec>` | Print frontmatter and first 20 lines of body |
 | `show --full <spec>` | Print frontmatter and complete body |
+| `show --body-only <spec>` | Print body without frontmatter (use when passing a spec to agents that should not see frontmatter) |
 | `set status <value> <spec>` | Transition status and move file to the matching folder |
 | `set priority <value> <spec>` | Set `priority` field (`high`, `medium`, `low`) |
 | `set tags <tag1,tag2> <spec>` | Replace the `tags` list |
