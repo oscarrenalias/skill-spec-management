@@ -8,3 +8,6 @@ __pycache__/
 .takt/logs/
 .takt/agent-runs/
 .takt/memory/
+
+.DS_Store
+.claude/settings.local.json
