@@ -2,7 +2,7 @@
 # See docs/multi-backend-agents.md for documentation.
 
 common:
-  default_runner: codex
+  default_runner: claude
   templates_dir: templates/agents
   test_command: uv run python -m unittest discover -s tests
   test_timeout_seconds: 900
